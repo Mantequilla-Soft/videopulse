@@ -1,0 +1,20 @@
+[Unit]
+Description=Video Pulse (dry run)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=videopulse
+WorkingDirectory=/opt/videopulse
+EnvironmentFile=/opt/videopulse/.env
+ExecStart=/usr/bin/node src/index.js
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

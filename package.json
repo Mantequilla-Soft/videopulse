@@ -1,0 +1,25 @@
+{
+  "name": "videopulse",
+  "version": "0.1.0",
+  "description": "Puts archived 3Speak videos back on a hotnode when people watch them again",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "once": "node src/index.js --once",
+    "stub-pancreas": "node scripts/stub-pancreas.js",
+    "test": "vitest run"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^7.2.0",
+    "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.1.0",
+    "vitest": "^4.1.6"
+  }
+}
