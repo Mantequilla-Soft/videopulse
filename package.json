@@ -8,8 +8,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "once": "node src/index.js --once",
+    "start": "node --env-file=.env src/index.js",
+    "once": "node --env-file=.env src/index.js --once",
     "stub-pancreas": "node scripts/stub-pancreas.js",
     "test": "vitest run"
   },

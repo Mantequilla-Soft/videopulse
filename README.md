@@ -48,9 +48,16 @@ journalctl -u videopulse -o cat | jq 'select(.msg == "run finished")'
 
 ```bash
 npm install
-cp .env.example .env    # then fill it in
+cp .env.example .env && chmod 600 .env    # then fill it in
 npm start               # schedule + status server
 npm run once            # one pass, prints the summary, exits non-zero if skipped
+```
+
+Both scripts load `.env` with Node's `--env-file`. To keep it running under pm2:
+
+```bash
+pm2 start ecosystem.config.cjs && pm2 save
+pm2 logs videopulse
 ```
 
 `GET /health` is open, and answers `200` when Mongo answers. `GET /status` needs `Authorization: Bearer $STATUS_TOKEN` and returns the last run, counters since start, and (empty in dry run) in-flight restores and permanent failures.
