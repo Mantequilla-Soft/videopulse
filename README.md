@@ -1,5 +1,7 @@
 # Video Pulse
 
+[![CI](https://github.com/Mantequilla-Soft/videopulse/actions/workflows/ci.yml/badge.svg)](https://github.com/Mantequilla-Soft/videopulse/actions/workflows/ci.yml)
+
 Video Pulse puts archived 3Speak videos back on a hotnode when people start watching them again. It decides what to restore and asks for it; the hotnode moves the bytes.
 
 - Design and v1 spec: [Mantequilla-Soft/buttercloud#18](https://github.com/Mantequilla-Soft/buttercloud/issues/18#issuecomment-6508555097)
