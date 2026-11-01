@@ -33,10 +33,10 @@ main() {
   export PATH="${nvm_bin:+$nvm_bin:}/usr/local/bin:/usr/bin:/bin"
 
   log() { echo "$(date -u +%FT%TZ) $*"; }
-  once() {  # log a message once per (kind, commit)
-    local kind="$1" sha="$2"; shift 2
-    [ "$(cat "$state_dir/$kind" 2>/dev/null || true)" = "$sha" ] && return 0
-    echo "$sha" > "$state_dir/$kind"
+  once() {  # log a message once per (kind, key), e.g. per commit and CI state
+    local kind="$1" key="$2"; shift 2
+    [ "$(cat "$state_dir/$kind" 2>/dev/null || true)" = "$key" ] && return 0
+    echo "$key" > "$state_dir/$kind"
     log "$*"
   }
 
@@ -60,7 +60,7 @@ main() {
   case "$state" in
     completed:success) ;;
     none|queued:*|in_progress:*|waiting:*|pending:*|requested:*)
-      once waiting "$remote" "waiting for CI on $short ($state)"
+      once waiting "$remote $state" "waiting for CI on $short ($state)"
       return 0 ;;
     *)
       echo "$remote" > "$state_dir/refused"
