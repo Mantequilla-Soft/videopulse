@@ -7,6 +7,7 @@ import { loadConfig } from './config.js';
 import { runOnce } from './run.js';
 import { createStatusServer } from './server.js';
 import { log } from './log.js';
+import { commit } from './version.js';
 
 const config = loadConfig();
 if (!cron.validate(config.runCron)) throw new Error(`RUN_CRON is not a valid cron expression: "${config.runCron}"`);
@@ -54,7 +55,7 @@ if (process.argv.includes('--once')) {
   }
 
   const server = createStatusServer(config, state, () => db.command({ ping: 1 }));
-  server.listen(config.port, config.host, () => log.info('videopulse started', { host: config.host, port: config.port, cron: config.runCron, dryRun: config.dryRun }));
+  server.listen(config.port, config.host, () => log.info('videopulse started', { commit, host: config.host, port: config.port, cron: config.runCron, dryRun: config.dryRun }));
 
   const task = cron.schedule(config.runCron, tick);
   if (config.runOnStart) tick();

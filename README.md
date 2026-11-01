@@ -60,7 +60,28 @@ pm2 start ecosystem.config.cjs && pm2 save
 pm2 logs videopulse
 ```
 
-`GET /health` is open, and answers `200` when Mongo answers. `GET /status` needs `Authorization: Bearer $STATUS_TOKEN` and returns the last run, counters since start, and (empty in dry run) in-flight restores and permanent failures.
+### Deploying
+
+A push to `main` deploys itself:
+
+1. GitHub Actions (`.github/workflows/ci.yml`) runs the tests on every push and PR.
+2. On the server, cron runs `scripts/deploy.sh` every minute from a **separate deploy checkout**, not a development clone. When `main` has moved and the `test` job passed on that exact commit, it fast-forwards, runs `npm ci --omit=dev` if the lockfile changed, and reloads pm2.
+3. It waits up to a minute for `/health` to report the new commit. If that doesn't happen, or any step fails, it rolls back to the previous commit, and won't retry that commit.
+
+Nothing on GitHub can reach the server: there's no runner, no inbound SSH and no deploy key. A commit whose CI fails is skipped. A commit with `[skip ci]` never deploys. The deploy log is `.deploy/deploy.log` in the deploy checkout. It only gets lines when something happens.
+
+Setting up a server:
+
+```bash
+git clone https://github.com/Mantequilla-Soft/videopulse.git ~/apps/videopulse
+cd ~/apps/videopulse && npm ci --omit=dev
+cp /path/to/.env .env && chmod 600 .env
+pm2 start ecosystem.config.cjs && pm2 save
+mkdir -p .deploy
+(crontab -l; echo "* * * * * /usr/bin/flock -n /tmp/videopulse-deploy.lock $HOME/apps/videopulse/scripts/deploy.sh >> $HOME/apps/videopulse/.deploy/deploy.log 2>&1") | crontab -
+```
+
+`GET /health` is open, and answers `200` when Mongo answers. It includes the running `commit`. `GET /status` needs `Authorization: Bearer $STATUS_TOKEN` and returns the last run, counters since start, and (empty in dry run) in-flight restores and permanent failures.
 
 `scripts/videopulse.service` is a systemd unit for a single instance. Run only one: claims would make a second copy harmless in live mode, but it would double the calls.
 

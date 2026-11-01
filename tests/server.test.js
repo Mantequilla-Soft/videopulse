@@ -14,9 +14,12 @@ async function start(cfg, pingDb = async () => {}) {
 afterEach(() => new Promise(r => server.close(r)));
 
 describe('status server', () => {
-  it('reports health when Mongo answers', async () => {
+  it('reports health when Mongo answers, with the running commit', async () => {
     const base = await start({ statusToken: 't' });
-    expect((await fetch(`${base}/health`)).status).toBe(200);
+    const res = await fetch(`${base}/health`);
+    expect(res.status).toBe(200);
+    // scripts/deploy.sh waits for this to match the commit it deployed.
+    expect((await res.json()).commit).toMatch(/^[0-9a-f]{7}$/);
   });
 
   it('reports 503 when Mongo does not', async () => {

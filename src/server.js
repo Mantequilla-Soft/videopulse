@@ -3,6 +3,7 @@
 
 import http from 'http';
 import { timingSafeEqual } from 'crypto';
+import { commit } from './version.js';
 
 function tokenMatches(header, token) {
   if (!token || typeof header !== 'string' || !header.startsWith('Bearer ')) return false;
@@ -28,9 +29,9 @@ export function createStatusServer({ statusToken, dryRun }, state, pingDb) {
     if (path === '/health') {
       try {
         await pingDb();
-        return send(res, 200, { status: 'ok' });
+        return send(res, 200, { status: 'ok', commit });
       } catch {
-        return send(res, 503, { status: 'mongo unreachable' });
+        return send(res, 503, { status: 'mongo unreachable', commit });
       }
     }
 
@@ -39,6 +40,7 @@ export function createStatusServer({ statusToken, dryRun }, state, pingDb) {
       if (!tokenMatches(req.headers.authorization, statusToken)) return send(res, 401, { error: 'unauthorized' });
       return send(res, 200, {
         dryRun,
+        commit,
         startedAt: state.startedAt,
         running: state.running,
         lastRun: state.lastRun,
