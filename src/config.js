@@ -31,6 +31,8 @@ export function loadConfig(env = process.env) {
     pancreasApiKey: required(env, 'PANCREAS_API_KEY'),
     statusToken: env.STATUS_TOKEN || null,
     port: int(env, 'PORT', 3020),
+    // Loopback by default: nothing outside this box needs /health or /status.
+    host: env.HOST || '127.0.0.1',
     runCron: env.RUN_CRON || '5 * * * *',
     runOnStart: env.RUN_ON_START !== 'false',
     fetchTimeoutMs: int(env, 'PANCREAS_TIMEOUT_MS', 30_000),

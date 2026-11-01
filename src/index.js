@@ -54,7 +54,7 @@ if (process.argv.includes('--once')) {
   }
 
   const server = createStatusServer(config, state, () => db.command({ ping: 1 }));
-  server.listen(config.port, () => log.info('videopulse started', { port: config.port, cron: config.runCron, dryRun: config.dryRun }));
+  server.listen(config.port, config.host, () => log.info('videopulse started', { host: config.host, port: config.port, cron: config.runCron, dryRun: config.dryRun }));
 
   const task = cron.schedule(config.runCron, tick);
   if (config.runOnStart) tick();

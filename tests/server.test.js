@@ -50,7 +50,7 @@ describe('config', () => {
 
   it('defaults to dry run with the spec defaults', () => {
     expect(loadConfig(base)).toMatchObject({
-      dryRun: true, databaseName: 'threespeak', runCron: '5 * * * *',
+      dryRun: true, databaseName: 'threespeak', runCron: '5 * * * *', host: '127.0.0.1',
       maxNewPerRun: 1, maxInFlight: 5, claimTimeoutMin: 120,
     });
   });

@@ -89,6 +89,7 @@ The file is a list of `{ collection, owner, permlink, sessions }`, re-read on ev
 | `PANCREAS_TIMEOUT_MS` | `30000` | |
 | `STATUS_TOKEN` | — | unset: `/status` is off |
 | `PORT` | `3020` | |
+| `HOST` | `127.0.0.1` | interface for `/health` and `/status` |
 | `DRY_RUN` | `true` | only `true` is accepted |
 | `RUN_CRON` | `5 * * * *` | |
 | `RUN_ON_START` | `true` | |
